@@ -1,0 +1,31 @@
+163504 msgget(IPC_PRIVATE, 0666)        = 32848
+163504 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f84b3700810) = 163505
+163504 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f84b3700810) = 163506
+163504 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f84b3700810) = 163507
+163504 msgsnd(32848, {1, "\0"}, 1, 0)   = 0
+163504 msgrcv(32848,  <unfinished ...>
+163506 msgrcv(32848,  <unfinished ...>
+163507 msgrcv(32848,  <unfinished ...>
+163505 msgrcv(32848, {1, "\0"}, 1, 1, 0) = 1
+163505 msgsnd(32848, {2, "\0"}, 1, 0)   = 0
+163504 <... msgrcv resumed>{2, "\0"}, 1, 2, 0) = 1
+163504 msgsnd(32848, {2, "\0"}, 1, 0)   = 0
+163504 msgrcv(32848,  <unfinished ...>
+163506 <... msgrcv resumed>{2, "\0"}, 1, 2, 0) = 1
+163506 msgsnd(32848, {3, "\0"}, 1, 0)   = 0
+163507 <... msgrcv resumed>{3, "\0"}, 1, 3, 0) = 1
+163506 +++ exited with 0 +++
+163504 <... msgrcv resumed>0x7fff58edd420, 1, 3, 0) = ? ERESTARTNOHAND (To be restarted if no handler)
+163504 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=163506, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+163504 msgrcv(32848,  <unfinished ...>
+163507 msgsnd(32848, {4, "\0"}, 1, 0)   = 0
+163507 +++ exited with 0 +++
+163504 <... msgrcv resumed>0x7fff58edd420, 1, 3, 0) = ? ERESTARTNOHAND (To be restarted if no handler)
+163504 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=163507, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+163504 msgrcv(32848,  <unfinished ...>
+163505 +++ exited with 0 +++
+163504 <... msgrcv resumed>0x7fff58edd420, 1, 3, 0) = ? ERESTARTNOHAND (To be restarted if no handler)
+163504 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=163505, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+163504 msgrcv(32848, 0x7fff58edd420, 1, 3, 0) = ? ERESTARTNOHAND (To be restarted if no handler)
+163504 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+163504 +++ killed by SIGINT +++
