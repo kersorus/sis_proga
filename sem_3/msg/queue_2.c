@@ -57,18 +57,15 @@ int main(int argc, char *argv[])
     msg_t msg = {};
     if (getpid() == ppid)
     {
-        for (ullong i = 1; i <= num; i++)
-        {
-            msg.type = i;
+        msg.type = 1;
 
-            errno = 0;
-            msgsnd(msqid, &msg, 1, 0);
-            CHECKR(errno, "msgsnd() error");
+        errno = 0;
+        msgsnd(msqid, &msg, 1, 0);
+        CHECKR(errno, "msgsnd() error");
 
-            errno = 0;
-            msgrcv(msqid, &msg, 1, num + 1, 0);
-            CHECKR(errno, "msgrcv() error");
-        }
+        errno = 0;
+        msgrcv(msqid, &msg, 1, num + 1, 0);
+        CHECKR(errno, "msgrcv() error");
     }
     else
     {
@@ -79,10 +76,11 @@ int main(int argc, char *argv[])
         printf("%llu ", ch_num);
         fflush(stdout);
 
-        msg.type = num + 1;
+        msg.type = ch_num + 1;
 
         errno = 0;
         msgsnd(msqid, &msg, 1, 0);
+        CHECKR(errno, "msgsnd() error");
     }
 
     if (getpid() == ppid)

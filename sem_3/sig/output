@@ -95,16 +95,12 @@ int main(int argc, char **argv)
 
             while (buff.byte < (size_t) nbytes)
             {
-                if (buff.data[buff.byte] & (1 << buff.bit))
+                if (buff.data[buff.byte] & (1 << buff.bit) )
                     kill(pid, SIGUSR1);
                 else
                     kill(pid, SIGUSR2); 
 
-                alarm(ALRM_TIME);
-
                 sigsuspend(&set);
-
-                alarm(0);
 
                 if (buff.bit >= 8)  
                 {
@@ -129,7 +125,7 @@ int main(int argc, char **argv)
             if (end)
             {
                 errno = 0;
-                write(STDOUT_FILENO, buff.data, buff.byte);
+                write (STDOUT_FILENO, buff.data, buff.byte);
                 CHECKR(errno, "write() error");
 
                 exit (EXIT_SUCCESS);
@@ -144,7 +140,7 @@ int main(int argc, char **argv)
             if (buff.byte == BUFSIZ)
             {
                 errno = 0;
-                write(STDOUT_FILENO, buff.data, BUFSIZ);
+                write (STDOUT_FILENO, buff.data, BUFSIZ);
                 CHECKR(errno, "write() error");
 
                 buff.byte = 0;
