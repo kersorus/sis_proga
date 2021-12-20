@@ -138,8 +138,8 @@ int main(int argc, char *argv[])
                 {
                     close(parent[j].fd_wr);
                     close(parent[j].fd_rd);
+                    free(parent[i].buffer);
                 }
-                free(parent.buffer);
                 free(parent);
                 break;
             }
@@ -216,8 +216,8 @@ int main(int argc, char *argv[])
                 {
                     close(parent[j].fd_wr);
                     close(parent[j].fd_rd);
+                    free(parent[j].buffer);
                 }
-                free(parent.buffer);
                 free(parent);
                 break;              
             }
@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        while (TRUE)
+        while (1)
         {
             errno = 0;
             child.loc = read(child.fd_rd, child.buffer, child.buffer_size);
