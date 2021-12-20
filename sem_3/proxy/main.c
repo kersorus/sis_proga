@@ -12,7 +12,7 @@
 #define BUF_ST 3
 #define BUF_MAX 1594323
 #define TIMEOUT 10
-#define MAX(a,b) (a > b) ? a : b 
+#define MAX(a,b) (((a) > (b)) ? (a) : (b)) 
 #define CHECKR(condition,message);\
         if (condition)\
         {\
@@ -106,12 +106,12 @@ int main(int argc, char *argv[])
                     CHECKR(errno, "close() error");
 
                     errno = 0;
-                    child->fd_rd = open(argv[2], O_RDONLY);
+                    child.fd_rd = open(argv[2], O_RDONLY);
                     CHECKR(errno, "open() error");
 
                     nfds = MAX(nfds, pipefd[1] + 1);
 
-                    child->fd_wr = pipefd[1];
+                    child.fd_wr = pipefd[1];
                 }
                 else
                 {
@@ -119,46 +119,46 @@ int main(int argc, char *argv[])
                     close(pipefd[1]);
                     CHECKR(errno, "close() error");
 
-                    child->fd_wr = STDOUT_FILENO;
+                    child.fd_wr = STDOUT_FILENO;
 
                     nfds = MAX(nfds, pipefd[0] + 1);
 
-                    child->fd_rd = pipefd[0];
+                    child.fd_rd = pipefd[0];
                 }
 
-                child->buffer_size = buf_size;
-                child->buffer = (char *) calloc(buf_size, sizeof(char));
-                if (child->buffer == 0)
+                child.buffer_size = buf_size;
+                child.buffer = (char *) calloc(buf_size, sizeof(char));
+                if (child.buffer == 0)
                 {
                     fprintf(stderr, "calloc() error");
                     exit(EXIT_FAILURE);
                 }
 
                 for (ullong j = 0; j < i; j++)
-                    {
-                        close(parent[j]->fd_wr);
-                        close(parent[j]->fd_rd);
-                    }
-                free(parent->buffer);
+                {
+                    close(parent[j].fd_wr);
+                    close(parent[j].fd_rd);
+                }
+                free(parent.buffer);
                 free(parent);
                 break;
             }
             else
             {
-                if (i = (ullong) 1)
+                if (i == (ullong) 1)
                 {
                     errno = 0;
                     close(pipefd[1]);
                     CHECKR(errno, "pipe() error");
 
-                    parent[i]->fd_rd = pipefd[0];
+                    parent[i].fd_rd = pipefd[0];
 
                     FD_SET(pipefd[0], &rfds);
                     nfds = MAX(nfds, pipefd[0] + 1);
                 
-                    parent[i]->buffer_size = buf_size;
-                    parent[i]->buffer = (char *) calloc(buf_size, sizeof(char));
-                    if (parent[i]->buffer == 0)
+                    parent[i].buffer_size = buf_size;
+                    parent[i].buffer = (char *) calloc(buf_size, sizeof(char));
+                    if (parent[i].buffer == 0)
                     {
                         fprintf(stderr, "calloc() error");
                         exit(EXIT_FAILURE);
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
                     close(pipefd[0]);
                     CHECKR(errno, "pipe() error");
 
-                    parent[i - 1]->fd_wr = pipefd[1];
+                    parent[i - 1].fd_wr = pipefd[1];
 
                     FD_SET(pipefd[1], &wfds);
                     nfds = MAX(nfds, pipefd[1] + 1);                    
@@ -193,74 +193,73 @@ int main(int argc, char *argv[])
 
             if (!pid)
             {
-                    errno = 0;
-                    close(pipefd[0]);
-                    CHECKR(errno, "close() error");
-                    errno = 0;
-                    close(pipefd[3]);
-                    CHECKR(errno, "close() error");
+                errno = 0;
+                close(pipefd[0]);
+                CHECKR(errno, "close() error");
+                errno = 0;
+                close(pipefd[3]);
+                CHECKR(errno, "close() error");
 
-                    nfds = MAX(nfds, MAX(pipefd[2] + 1, pipefd[1] + 1));
+                nfds = MAX(nfds, MAX(pipefd[2] + 1, pipefd[1] + 1));
 
-                    child->fd_wr = pipefd[1];
-                    child->fd_rd = pipefd[2];
-                    child->buffer_size = buf_size;
-                    child->buffer = (char *) calloc(buf_size, sizeof(char));
-                    if (child->buffer == 0)
-                    {
-                        fprintf(stderr, "calloc() error");
-                        exit(EXIT_FAILURE);
-                    }
+                child.fd_wr = pipefd[1];
+                child.fd_rd = pipefd[2];
+                child.buffer_size = buf_size;
+                child.buffer = (char *) calloc(buf_size, sizeof(char));
+                if (child.buffer == 0)
+                {
+                    fprintf(stderr, "calloc() error");
+                    exit(EXIT_FAILURE);
+                }
 
-                    for (ullong j = 0; j < i; j++)
-                    {
-                        close(parent[j]->fd_wr);
-                        close(parent[j]->fd_rd);
-                    }
-                    free(parent->buffer);
-                    free(parent);
-                    break;              
+                for (ullong j = 0; j < i; j++)
+                {
+                    close(parent[j].fd_wr);
+                    close(parent[j].fd_rd);
+                }
+                free(parent.buffer);
+                free(parent);
+                break;              
             }
             else
             {
-                    errno = 0;
-                    close(pipefd[1]);
-                    CHECKR(errno, "close() error");
-                    errno = 0;
-                    close(pipefd[2]);
-                    CHECKR(errno, "close() error");
+                errno = 0;
+                close(pipefd[1]);
+                CHECKR(errno, "close() error");
+                errno = 0;
+                close(pipefd[2]);
+                CHECKR(errno, "close() error");
 
-                    nfds = MAX(nfds, MAX(pipefd[3] + 1, pipefd[0] + 1));
+                nfds = MAX(nfds, MAX(pipefd[3] + 1, pipefd[0] + 1));
 
-                    parent[i - 1]->fd_wr = pipefd[3];
-                    parent[i]->fd_rd = pipefd[0];
-                    parent[i]->buffer_size = buf_size;
-                    parent[i]->buffer = (char *) calloc(buf_size, sizeof(char));
-                    if (parent[i]->buffer == 0)
-                    {
-                        fprintf(stderr, "calloc() error");
-                        exit(EXIT_FAILURE);
-                    }
+                parent[i - 1].fd_wr = pipefd[3];
+                parent[i].fd_rd = pipefd[0];
+                parent[i].buffer_size = buf_size;
+                parent[i].buffer = (char *) calloc(buf_size, sizeof(char));
+                if (parent[i].buffer == 0)
+                {
+                    fprintf(stderr, "calloc() error");
+                    exit(EXIT_FAILURE);
+                }
 
-                    FD_SET(pipefd[0], &rfds);
-                    FD_SET(pipefd[3], &wfds);
+                FD_SET(pipefd[0], &rfds);
+                FD_SET(pipefd[3], &wfds);
             }
         }
     }
-}
 
-if (ppid == getpid())
+    if (ppid == getpid())
     {
         size_t fnsh = 0;
 
         for (ullong i = 1; i <= num; i++)
         {
             errno = 0;
-            fcntl(parent[i]->fd_rd, F_SETFL, O_RDONLY | O_NONBLOCK);
+            fcntl(parent[i].fd_rd, F_SETFL, O_RDONLY | O_NONBLOCK);
             CHECKR(errno, "fcntl() error");
 
             errno = 0;
-            fcntl(parent[i]->fd_wr, F_SETFL, O_WRONLY | O_NONBLOCK);
+            fcntl(parent[i].fd_wr, F_SETFL, O_WRONLY | O_NONBLOCK);
             CHECKR(errno, "fcntl() error");
         }
 
@@ -279,42 +278,42 @@ if (ppid == getpid())
 
             for (ullong i = 1; i <= num; i++)
             {
-                if (FD_ISSET(parent[i]->fd_rd, &rfds_cpy))
+                if (FD_ISSET(parent[i].fd_rd, &rfds_cpy))
                 {
                     errno = 0;
-                    parent[i]->loc = read(parent[i]->fd_rd, parent[i]->buffer, parent[i]->buffer_size);
+                    parent[i].loc = read(parent[i].fd_rd, parent[i].buffer, parent[i].buffer_size);
                     CHECKR(errno, "read() error")
 
-                    if (!parent[i]->loc)
+                    if (!parent[i].loc)
                     {
-                        FD_CLR(parent[i]->fd_rd, &rfds);
-                        close(parent[i]->fd_rd);
-                        close(parent[i]->fd_wr);
-                        free(parent[i]->buffer);
+                        FD_CLR(parent[i].fd_rd, &rfds);
+                        close(parent[i].fd_rd);
+                        close(parent[i].fd_wr);
+                        free(parent[i].buffer);
 
                         fnsh++;
                     }
                     else
                     {
-                        FD_CLR(parent[i]->fd_rd, &rfds);
-                        FD_SET(parent[i]->fd_wr, &wfds);
+                        FD_CLR(parent[i].fd_rd, &rfds);
+                        FD_SET(parent[i].fd_wr, &wfds);
                     }
                 }
 
-                if (FD_ISSET(parent[i]->fd_wr, &wfds_cpy))
+                if (FD_ISSET(parent[i].fd_wr, &wfds_cpy))
                 {
                     errno = 0;
-                    size_t b_amnt = write (parent[i]->fd_wr, parent[i]->buffer + parent[i]->disloc, parent[i]->loc);
+                    size_t b_amnt = write (parent[i].fd_wr, parent[i].buffer + parent[i].disloc, parent[i].loc);
                     CHECKR(errno, "write() error");
     
-                    parent[i]->disloc += b_amnt;
-                    parent[i]->loc -= b_amnt;
+                    parent[i].disloc += b_amnt;
+                    parent[i].loc -= b_amnt;
 
-                    if (!parent[i]->loc)
+                    if (!parent[i].loc)
                     {
-                        FD_CLR(parent[i]->fd_wr, &wfds);
-                        FD_SET(parent[i]->fd_rd, &rfds);
-                        parent[i]->disloc = 0;
+                        FD_CLR(parent[i].fd_wr, &wfds);
+                        FD_SET(parent[i].fd_rd, &rfds);
+                        parent[i].disloc = 0;
                     }
                 }
             }
