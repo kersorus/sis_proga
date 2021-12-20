@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
     {
         size_t fnsh = 0;
 
-        for (ullong i = 1; i <= num; i++)
+        for (ullong i = 1; i < num; i++)
         {
             errno = 0;
             fcntl(parent[i].fd_rd, F_SETFL, O_RDONLY | O_NONBLOCK);
